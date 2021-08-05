@@ -2,12 +2,12 @@
 I am a class to import devices from a external source. 
 I return a collection of Smart Devices.
 
-SmartDevicesImporter new importDevicesFrom: 'http://localhost/plugins/SmartIoT/devices.json'.
+SIoTSmartDevicesImporter new importDevicesFrom: 'http://localhost/plugins/SmartIoT/devices.json'.
 
 
 "
 Class {
-	#name : #SmartDevicesImporter,
+	#name : #SIoTSmartDevicesImporter,
 	#superclass : #Object,
 	#instVars : [
 		'externalHTTPPath'
@@ -16,7 +16,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SmartDevicesImporter >> createDevices [
+SIoTSmartDevicesImporter >> createDevices [
 	"Return a collection of smart devices imported from external source"
 	| devicesList devicesExternal smartDevices|
 	devicesExternal := self readDevicesList.
@@ -25,7 +25,7 @@ SmartDevicesImporter >> createDevices [
 
 	devicesList do: [ :device | 	
 		smartDevices add:(
-		SmartDevices new
+		SIoTSmartDevices new
 			apiKey: (devicesExternal at: 'apiKey');
 			host: (devicesExternal at: 'host');
 			path: (devicesExternal at: 'path');
@@ -39,26 +39,26 @@ SmartDevicesImporter >> createDevices [
 ]
 
 { #category : #accessing }
-SmartDevicesImporter >> externalHTTPPath [
+SIoTSmartDevicesImporter >> externalHTTPPath [
 
 	^ externalHTTPPath
 ]
 
 { #category : #accessing }
-SmartDevicesImporter >> externalHTTPPath: anObject [
+SIoTSmartDevicesImporter >> externalHTTPPath: anObject [
 
 	externalHTTPPath := anObject
 ]
 
 { #category : #accessing }
-SmartDevicesImporter >> importDevicesFrom: aHTTPPath [
+SIoTSmartDevicesImporter >> importDevicesFrom: aHTTPPath [
 
 	externalHTTPPath := aHTTPPath.
 	^ self createDevices.
 ]
 
 { #category : #'as yet unclassified' }
-SmartDevicesImporter >> jsonExample [
+SIoTSmartDevicesImporter >> jsonExample [
 	^ '{
   "host": "127.0.0.1",
   "path": "core/api/jeeApi.php",
@@ -113,7 +113,7 @@ SmartDevicesImporter >> jsonExample [
 ]
 
 { #category : #accessing }
-SmartDevicesImporter >> readDevicesList [
+SIoTSmartDevicesImporter >> readDevicesList [
 	"Read a JSON file and return an object"
 	| webClient externalJson |
 	webClient := ZnClient new.

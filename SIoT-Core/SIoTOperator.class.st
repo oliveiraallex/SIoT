@@ -1,5 +1,5 @@
 "
-I am a class to implement a list of tasks to be done
+I am a class to implement and manage devices, commands and tasks
 "
 Class {
 	#name : #SIoTOperator,
@@ -32,7 +32,7 @@ SIoTOperator >> devices: anObject [
 
 { #category : #'as yet unclassified' }
 SIoTOperator >> initialize [
-	devices :=  SmartDevicesImporter new importDevicesFrom: 'http://localhost/plugins/SmartIoT/devices.json'.
+	devices :=  SIoTSmartDevicesImporter new importDevicesFrom: 'http://localhost/plugins/SmartIoT/devices.json'.
 ]
 
 { #category : #'as yet unclassified' }

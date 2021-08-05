@@ -1,5 +1,5 @@
 Class {
-	#name : #UIDemo,
+	#name : #SIoTUIDemo,
 	#superclass : #SpPresenter,
 	#instVars : [
 		'menu',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #'user interface' }
-UIDemo class >> menuExamplesOn: aBuilder [
+SIoTUIDemo class >> menuExamplesOn: aBuilder [
 	"Add a custom menu item to the world menu"
 
 	<worldMenu>
@@ -25,7 +25,7 @@ UIDemo class >> menuExamplesOn: aBuilder [
 ]
 
 { #category : #'instance creation' }
-UIDemo class >> on: aModel [
+SIoTUIDemo class >> on: aModel [
 
 	^ self basicNew 
 		model: aModel;
@@ -34,7 +34,7 @@ UIDemo class >> on: aModel [
 ]
 
 { #category : #specs }
-UIDemo class >> open [
+SIoTUIDemo class >> open [
 	<example>
 	
 	^ self new
@@ -42,7 +42,7 @@ UIDemo class >> open [
 ]
 
 { #category : #accessing }
-UIDemo >> addItemTo: aGroup [
+SIoTUIDemo >> addItemTo: aGroup [
 	aGroup
 		addItem: [ :item | 
 			item
@@ -56,12 +56,12 @@ UIDemo >> addItemTo: aGroup [
 ]
 
 { #category : #accessing }
-UIDemo >> availablePages [
+SIoTUIDemo >> availablePages [
 	^ SpDemoPage availablePages
 ]
 
 { #category : #initialization }
-UIDemo >> connectPresenters [
+SIoTUIDemo >> connectPresenters [
 
 	list selectItem: self selectedPage.
 	list whenSelectionChangedDo: [ :selection | 
@@ -80,13 +80,13 @@ UIDemo >> connectPresenters [
 ]
 
 { #category : #accessing }
-UIDemo >> defaultPage [
+SIoTUIDemo >> defaultPage [
 
 	^ self availablePages first.
 ]
 
 { #category : #api }
-UIDemo >> initialExtent [
+SIoTUIDemo >> initialExtent [
 
 	| fontWidth rowHeight |
 	fontWidth := (StandardFonts defaultFont widthOfString: 'M').
@@ -97,7 +97,7 @@ UIDemo >> initialExtent [
 ]
 
 { #category : #initialization }
-UIDemo >> initializePresenters [
+SIoTUIDemo >> initializePresenters [
 
 	menu := self mainMenu.
 	list := self newList.
@@ -139,17 +139,17 @@ UIDemo >> initializePresenters [
 ]
 
 { #category : #accessing }
-UIDemo >> list [
+SIoTUIDemo >> list [
 	^ list
 ]
 
 { #category : #accessing }
-UIDemo >> list: anObject [
+SIoTUIDemo >> list: anObject [
 	list := anObject
 ]
 
 { #category : #initialization }
-UIDemo >> mainMenu [
+SIoTUIDemo >> mainMenu [
 	| aMenu |
 	aMenu := self newMenuBar
 		addGroup: [ :group | 
@@ -207,37 +207,37 @@ UIDemo >> mainMenu [
 ]
 
 { #category : #accessing }
-UIDemo >> menu [
+SIoTUIDemo >> menu [
 	^ menu
 ]
 
 { #category : #accessing }
-UIDemo >> menu: anObject [
+SIoTUIDemo >> menu: anObject [
 	menu := anObject
 ]
 
 { #category : #accessing }
-UIDemo >> page [
+SIoTUIDemo >> page [
 	^ page
 ]
 
 { #category : #accessing }
-UIDemo >> page: anObject [
+SIoTUIDemo >> page: anObject [
 	page := anObject
 ]
 
 { #category : #accessing }
-UIDemo >> selectedPage [
+SIoTUIDemo >> selectedPage [
 	^ selectedPage
 ]
 
 { #category : #accessing }
-UIDemo >> selectedPage: anObject [
+SIoTUIDemo >> selectedPage: anObject [
 	selectedPage := anObject
 ]
 
 { #category : #initialization }
-UIDemo >> subMenu [
+SIoTUIDemo >> subMenu [
 	^ self newMenu
 		addItem: [ :item | 
 			item
@@ -267,7 +267,7 @@ UIDemo >> subMenu [
 ]
 
 { #category : #api }
-UIDemo >> title [
+SIoTUIDemo >> title [
 	
 	^ 'Spec UI Framework Demo'.
 ]

@@ -1,7 +1,7 @@
 "
 I am a class for instantiating smart device objects
 
-light01 := SmartDevices new.
+light01 := SIoTSmartDevices new.
 
 light01 
 id: 1;
@@ -31,7 +31,7 @@ commands := OrderedCollection with: command01 with: command02.
 
 light01 commands: commands.
 
-command := RunCommandJeedom new. 
+command := SIoTRunCommandJeedom new. 
 command onDevice: light01.
 command commands. 
 command onDevice: light01; command: 'turnOff'.
@@ -40,7 +40,7 @@ command commandLine.
 command run.
 "
 Class {
-	#name : #SmartDevices,
+	#name : #SIoTSmartDevices,
 	#superclass : #Object,
 	#instVars : [
 		'host',
@@ -56,97 +56,97 @@ Class {
 }
 
 { #category : #accessing }
-SmartDevices >> alias [
+SIoTSmartDevices >> alias [
 
 	^ alias
 ]
 
 { #category : #accessing }
-SmartDevices >> alias: anObject [
+SIoTSmartDevices >> alias: anObject [
 
 	alias := anObject
 ]
 
 { #category : #accessing }
-SmartDevices >> apiKey [
+SIoTSmartDevices >> apiKey [
 
 	^ apiKey
 ]
 
 { #category : #accessing }
-SmartDevices >> apiKey: anObject [
+SIoTSmartDevices >> apiKey: anObject [
 
 	apiKey := anObject
 ]
 
 { #category : #accessing }
-SmartDevices >> commands [
+SIoTSmartDevices >> commands [
 
 	^ commands
 ]
 
 { #category : #accessing }
-SmartDevices >> commands: anObject [
+SIoTSmartDevices >> commands: anObject [
 
 	commands := anObject
 ]
 
 { #category : #accessing }
-SmartDevices >> host [
+SIoTSmartDevices >> host [
 
 	^ host
 ]
 
 { #category : #accessing }
-SmartDevices >> host: anObject [
+SIoTSmartDevices >> host: anObject [
 
 	host := anObject
 ]
 
 { #category : #accessing }
-SmartDevices >> id [
+SIoTSmartDevices >> id [
 
 	^ id
 ]
 
 { #category : #accessing }
-SmartDevices >> id: anObject [
+SIoTSmartDevices >> id: anObject [
 
 	id := anObject
 ]
 
 { #category : #accessing }
-SmartDevices >> name [
+SIoTSmartDevices >> name [
 
 	^ name
 ]
 
 { #category : #accessing }
-SmartDevices >> name: anObject [
+SIoTSmartDevices >> name: anObject [
 
 	name := anObject
 ]
 
 { #category : #accessing }
-SmartDevices >> path [
+SIoTSmartDevices >> path [
 
 	^ path
 ]
 
 { #category : #accessing }
-SmartDevices >> path: anObject [
+SIoTSmartDevices >> path: anObject [
 
 	path := anObject
 ]
 
 { #category : #accessing }
-SmartDevices >> type [
+SIoTSmartDevices >> type [
 
 	^ type
 ]
 
 { #category : #accessing }
-SmartDevices >> type: anObject [
+SIoTSmartDevices >> type: anObject [
 
 	type := anObject
 ]

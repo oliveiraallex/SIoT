@@ -1,18 +1,18 @@
 Class {
-	#name : #RunCommandJeedom,
-	#superclass : #RunCommand,
+	#name : #SIoTRunCommandJeedom,
+	#superclass : #SIoTRunCommand,
 	#category : #'SIoT-Core'
 }
 
 { #category : #accessing }
-RunCommandJeedom >> command: aString [
+SIoTRunCommandJeedom >> command: aString [
 
 	command := aString.
 	self createCommandLine
 ]
 
 { #category : #accessing }
-RunCommandJeedom >> command: aString parameters: anObject [
+SIoTRunCommandJeedom >> command: aString parameters: anObject [
 
 	command := aString.
 	parameters := anObject.
@@ -20,7 +20,7 @@ RunCommandJeedom >> command: aString parameters: anObject [
 ]
 
 { #category : #accessing }
-RunCommandJeedom >> createCommandLine [
+SIoTRunCommandJeedom >> createCommandLine [
 	
 	| commandInfo commandRaw arguments webClient | 
 	
@@ -37,12 +37,12 @@ RunCommandJeedom >> createCommandLine [
 ]
 
 { #category : #accessing }
-RunCommandJeedom >> run [ 
+SIoTRunCommandJeedom >> run [ 
 	^ self runCommandLine
 ]
 
 { #category : #accessing }
-RunCommandJeedom >> runCommandLine [
+SIoTRunCommandJeedom >> runCommandLine [
 	
 	| webClient |
 	webClient := ZnClient new. 

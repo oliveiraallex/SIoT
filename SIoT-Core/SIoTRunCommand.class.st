@@ -1,5 +1,5 @@
 Class {
-	#name : #RunCommand,
+	#name : #SIoTRunCommand,
 	#superclass : #Object,
 	#instVars : [
 		'device',
@@ -12,62 +12,62 @@ Class {
 }
 
 { #category : #accessing }
-RunCommand >> command [
+SIoTRunCommand >> command [
 
 	^ command
 ]
 
 { #category : #accessing }
-RunCommand >> command: aString [
+SIoTRunCommand >> command: aString [
 
 	command := aString 
 ]
 
 { #category : #accessing }
-RunCommand >> command: aString parameters: anObject [
+SIoTRunCommand >> command: aString parameters: anObject [
 
 	parameters := anObject
 ]
 
 { #category : #accessing }
-RunCommand >> commandLine [
+SIoTRunCommand >> commandLine [
 
 	^ commandLine
 ]
 
 { #category : #accessing }
-RunCommand >> commandLine: anObject [
+SIoTRunCommand >> commandLine: anObject [
 
 	^ commandLine := anObject
 ]
 
 { #category : #accessing }
-RunCommand >> commands [
+SIoTRunCommand >> commands [
 
 	^ commands
 ]
 
 { #category : #accessing }
-RunCommand >> commands: anObject [
+SIoTRunCommand >> commands: anObject [
 
 	commands := anObject
 ]
 
 { #category : #accessing }
-RunCommand >> device [
+SIoTRunCommand >> device [
 
 	^ device
 ]
 
 { #category : #accessing }
-RunCommand >> device: anObject [
+SIoTRunCommand >> device: anObject [
 
 	device := anObject
 	
 ]
 
 { #category : #control }
-RunCommand >> extractCommands [
+SIoTRunCommand >> extractCommands [
 	commands := OrderedCollection new.  
 	device commands do: [ :a | 
 		commands add: ( a at: 'name' ) ]
@@ -75,7 +75,7 @@ RunCommand >> extractCommands [
 ]
 
 { #category : #accessing }
-RunCommand >> onDevice: anObject [
+SIoTRunCommand >> onDevice: anObject [
 
 	device := anObject.
 	self extractCommands.
@@ -83,12 +83,12 @@ RunCommand >> onDevice: anObject [
 ]
 
 { #category : #accessing }
-RunCommand >> parameters [
+SIoTRunCommand >> parameters [
 
 	^ parameters
 ]
 
 { #category : #accessing }
-RunCommand >> run [
+SIoTRunCommand >> run [
 	self subclassResponsibility
 ]
