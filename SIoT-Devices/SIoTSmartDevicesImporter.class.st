@@ -10,7 +10,8 @@ Class {
 	#name : #SIoTSmartDevicesImporter,
 	#superclass : #Object,
 	#instVars : [
-		'externalHTTPPath'
+		'externalHTTPPath',
+		'host'
 	],
 	#category : #'SIoT-Devices'
 }
@@ -48,6 +49,18 @@ SIoTSmartDevicesImporter >> externalHTTPPath [
 SIoTSmartDevicesImporter >> externalHTTPPath: anObject [
 
 	externalHTTPPath := anObject
+]
+
+{ #category : #accessing }
+SIoTSmartDevicesImporter >> host [
+
+	^ host
+]
+
+{ #category : #accessing }
+SIoTSmartDevicesImporter >> host: anObject [
+
+	host := anObject
 ]
 
 { #category : #accessing }
