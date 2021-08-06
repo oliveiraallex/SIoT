@@ -70,7 +70,7 @@ SIoTRunCommand >> device: anObject [
 SIoTRunCommand >> extractCommands [
 	commands := OrderedCollection new.  
 	device commands do: [ :a | 
-		commands add: ( a at: 'name' ) ]
+		commands add: ( a at: 'logicalId' ) ]
 	
 ]
 
