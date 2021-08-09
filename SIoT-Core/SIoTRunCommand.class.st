@@ -26,7 +26,8 @@ SIoTRunCommand >> command: aString [
 { #category : #accessing }
 SIoTRunCommand >> command: aString parameters: anObject [
 
-	parameters := anObject
+	command := aString.
+	parameters := anObject.
 ]
 
 { #category : #accessing }
@@ -68,9 +69,9 @@ SIoTRunCommand >> device: anObject [
 
 { #category : #control }
 SIoTRunCommand >> extractCommands [
-	commands := OrderedCollection new.  
+	commands := Dictionary new.  
 	device commands do: [ :a | 
-		commands add: ( a at: 'logicalId' ) ]
+		commands at: ( a at: 'logicalId' ) put: ( a at: 'subType' )]
 	
 ]
 

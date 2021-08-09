@@ -3,15 +3,22 @@ I am a class that read a list of commands of a Smart Device, returns a list of o
 
 - import the devices from Jeedom platform and create Smart Devices objects in Pharo. It will return a ordered collection of devices:  
 
-devices := SIoTSmartDevicesImporterJeedom new importDevicesFrom: 'localhost' apiKey:'YOUR_APIKEY'.
+jeedomDevices := SIoTSmartDevicesImporterJeedom new importDevicesFrom: 'localhost' apiKey:'YOUR_APIKEY'.
 
 - print the commands of device:
 
-command := SIoTRunCommandJeedom new onDevice: (devices at: 1); commands.
+smartDevice := (jeedomDevices at: 2).
+runCommand := SIoTRunCommandJeedom new onDevice: smartDevice.
+runCommand commands.
 
 - run the command of device. It will call the Jeedom API and run the command inside Jeedom:
 
-command onDevice: (devices at: 1); command: 'TurnOn'; run.
+runCommand onDevice: smartDevice; command: 'TurnOn'; run.
+runCommand onDevice: smartDevice; command: 'TurnOff'; run.
+runCommand onDevice: smartDevice; command: 'TEMPERATURE'; run.
+runCommand onDevice: smartDevice; command: 'SetTemperature' parameters: '50'; run.
+runCommand onDevice: smartDevice; command: 'BRIGHTNESS'; run.
+runCommand onDevice: smartDevice; command: 'SetBrightness' parameters: '100'; run.
 "
 Class {
 	#name : #SIoTRunCommandJeedom,
@@ -38,7 +45,7 @@ SIoTRunCommandJeedom >> command: aString parameters: anObject [
 SIoTRunCommandJeedom >> createCommandLine [
 	
 	| commandInfo commandRaw arguments webClient | 
-	
+
 	commandInfo := device commands detect: [ :list | (list at: 'logicalId') = self command ].
 	commandRaw := commandInfo at: 'id'.
 	
@@ -46,6 +53,8 @@ SIoTRunCommandJeedom >> createCommandLine [
 			{('apikey' -> device apiKey asString).
 			('type' -> 'cmd').
 			('id' -> commandRaw )} asDictionary.
+
+	parameters ifNotNil: [ arguments at: ((commandInfo at: 'subType')asString) put: parameters asString ].
 			
 	webClient := ZnClient new url: ('http://', device host , '/' ,device path) ; queryAddAll: arguments.
 	^ commandLine := webClient request requestLine uri asString
