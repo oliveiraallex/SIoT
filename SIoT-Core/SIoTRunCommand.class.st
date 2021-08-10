@@ -69,9 +69,9 @@ SIoTRunCommand >> device: anObject [
 
 { #category : #control }
 SIoTRunCommand >> extractCommands [
-	commands := Dictionary new.  
+	commands := OrderedCollection new.  
 	device commands do: [ :a | 
-		commands at: ( a at: 'logicalId' ) put: ( a at: 'subType' )]
+		commands add: ( a at: 'logicalId' ) ]
 	
 ]
 
