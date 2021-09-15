@@ -68,8 +68,14 @@ SIoTRunCommandJeedom >> run [
 { #category : #accessing }
 SIoTRunCommandJeedom >> runCommandLine [
 	
-	| webClient |
+	| webClient semaphore result |
 	webClient := ZnClient new. 
 	webClient url: commandLine.
-	^ webClient get asString
+	semaphore := Semaphore new.
+	[result := webClient get asString.
+	semaphore signal ] fork.
+	semaphore 
+		wait: 2000 milliSeconds
+		onCompletion: [ ^ result ] 
+		onTimeout: [ ^ 0]
 ]

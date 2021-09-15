@@ -86,15 +86,22 @@ SIoTSmartDevicesImporterJeedom >> path: anObject [
 
 { #category : #accessing }
 SIoTSmartDevicesImporterJeedom >> readDevicesList [
-	"Read a JSON file and return an object"
-	| webClient externalJson |
-	webClient := ZnClient new.
 
+	"Read a JSON file and return an object"
+
+	| webClient externalJson semaphore |
+	webClient := ZnClient new.
+	[ 
 	externalHTTPPath
 		ifNil: [ externalJson := self jsonExample ]
-		ifNotNil: [ externalJson := webClient url: externalHTTPPath; get ].
-
-	^ (NeoJSONReader on: externalJson readStream)
-		  listClass: Array;
-		  next
+		ifNotNil: [ semaphore := Semaphore new.
+						[ externalJson := webClient url: externalHTTPPath; get.
+						semaphore signal ] fork.
+						semaphore 
+							wait: 2000 milliSeconds	onCompletion: 
+							[ ^ (NeoJSONReader on: externalJson readStream)
+								listClass: Array;
+								next ]
+							onTimeout: [ ^ 0 ] ] 
+		] onErrorDo: [ :error | Transcript show: 'ERROR ' , error asString ]
 ]
