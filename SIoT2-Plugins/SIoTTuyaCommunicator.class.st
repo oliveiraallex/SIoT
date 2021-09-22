@@ -147,63 +147,84 @@ SIoTTuyaCommunicator >> formatToJSONObject: aDictionary [
 ]
 
 { #category : #'private - requesting' }
-SIoTTuyaCommunicator >> getSigned: path headers: aDictionary [
+SIoTTuyaCommunicator >> getSignedServices: path headers: aDictionary [
 	
-	^ self getSigned: path headers: aDictionary body: ''
+	^ self getSignedServices: path headers: aDictionary body: ''
 ]
 
 { #category : #'private - requesting' }
-SIoTTuyaCommunicator >> getSigned: path headers: aDictionary body: aDictionary2 [
-	
-	
-	| webClient headerFormated get signedString signedString2 sha256 signature cr nonce|
-	
-	
+SIoTTuyaCommunicator >> getSignedServices: path headers: aDictionary body: aDictionary2 [
+
+	| webClient headerFormated get stringToSign stringSigned sha256 signature cr nonce |
 	headerFormated := self formatToJSONObject: aDictionary2.
-	
 	sha256 := self calculateSHA256: headerFormated.
-	
-	"self stringToSign:  1 HTTPMethod: 'GET'."
-	cr := (Character lf) asString. 
+	cr := Character lf asString.
 	nonce := ''.
-	"timestamp := '1632307722361'."
-	
-	signedString := 'GET',cr,sha256,cr,headerFormated,cr,path.
-	
-		
-	signedString2 := accessID , timestamp , nonce , signedString.
-	
-	
-	
+
+	stringToSign := 'GET' , cr , sha256 , cr , headerFormated , cr , path.
+	"stringSigned := accessID , timestamp , nonce , stringToSign."
+	stringSigned := accessID , easyAccessToken , timestamp  , nonce , stringToSign.
+	aDictionary at: 'access_token' put: easyAccessToken.
+	 
 	signature := (HMAC on: SHA256)
-		key: accessSecret  asByteArray;
-		digestMessage: signedString2 asByteArray.
-	easySignToken :=  (signature hex)asUppercase.
-	
-	
+		             key: accessSecret asByteArray;
+		             digestMessage: stringSigned asByteArray.
+	easySignToken := signature hex asUppercase.
+
 	aDictionary at: 'sign' put: easySignToken.
 	"aDictionary at: 't' put: timestamp."
 	
 
-	
-	
-	
-	
 	webClient := ZnClient new
-		url: url,path;
-		headerAddAll: aDictionary.
+		             url: url , path;
+		             headerAddAll: aDictionary.
 	get := webClient get.
-	
+
 	^ get
+]
+
+{ #category : #'private - requesting' }
+SIoTTuyaCommunicator >> getSignedTokens: path headers: aDictionary [
+	
+	^ self getSignedTokens: path headers: aDictionary body: ''
+]
+
+{ #category : #'private - requesting' }
+SIoTTuyaCommunicator >> getSignedTokens: path headers: aDictionary body: aDictionary2 [
+
+	| webClient headerFormated get stringToSign stringSigned sha256 signature cr nonce |
+	headerFormated := self formatToJSONObject: aDictionary2.
+	sha256 := self calculateSHA256: headerFormated.
+	cr := Character lf asString.
+	nonce := ''.
+
+	stringToSign := 'GET' , cr , sha256 , cr , headerFormated , cr , path.
+	stringSigned := accessID , timestamp , nonce , stringToSign.
+	"stringSigned := accessID , easyAccessToken , timestamp  , nonce , stringToSign.
+	aDictionary at: 'access_token' put: easyAccessToken."
+	
+	signature := (HMAC on: SHA256)
+		             key: accessSecret asByteArray;
+		             digestMessage: stringSigned asByteArray.
+	easySignToken := signature hex asUppercase.
+
+	aDictionary at: 'sign' put: easySignToken.
+	aDictionary at: 't' put: timestamp.
 	
 
+	webClient := ZnClient new
+		             url: url , path;
+		             headerAddAll: aDictionary.
+	get := webClient get.
 
+	^ get
 ]
 
 { #category : #'as yet unclassified' }
 SIoTTuyaCommunicator >> getUnixTimestamp [
 	"Return Unix Timestamp (miliseconds since Jan 01 1970 UTC)"  
 	^ timestamp := (Time primUTCMillisecondsClock - 2177452800000) asString
+	"^ timestamp "
 ]
 
 { #category : #'as yet unclassified' }
