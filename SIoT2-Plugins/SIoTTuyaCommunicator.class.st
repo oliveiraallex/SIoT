@@ -101,6 +101,16 @@ SIoTTuyaCommunicator >> easySignToken: anObject [
 ]
 
 { #category : #'private - requesting' }
+SIoTTuyaCommunicator >> formatCodeValueDictionary: aDictionary [
+	
+	| newDictionary |
+	newDictionary := Dictionary new. 
+	aDictionary ifEmpty: [ ^ ''  ].
+	aDictionary do: [ :item | newDictionary add: (item at: 'code')->(item at: 'value') ].
+	^ newDictionary
+]
+
+{ #category : #'private - requesting' }
 SIoTTuyaCommunicator >> formatToJSONObject: aDictionary [
 
 	aDictionary ifEmpty: [ ^ ''  ].
