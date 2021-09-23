@@ -5,6 +5,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SIoTTuya >> getDeviceDataPoints: aStringDeviceID [
+	
+	| result objectFromJSON |
+	result := self getDeviceDataPointsQuery: aStringDeviceID.
+	objectFromJSON := NeoJSONReader fromString: result.
+	(objectFromJSON includesKey: #success) 
+		ifTrue: [ ((objectFromJSON at:'success') = true) 
+			ifTrue: [ ^ objectFromJSON at:'result'
+			]
+			ifFalse: [ ^ objectFromJSON at:'msg' ]
+		]
+		ifFalse: [ ^ 'error' ]
+]
+
+{ #category : #'as yet unclassified' }
 SIoTTuya >> getDeviceInformation: aStringDeviceID [
 	
 	| result objectFromJSON |
