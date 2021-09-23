@@ -38,48 +38,12 @@ SIoTTuyaCommunicator >> accessSecret [
 
 { #category : #'as yet unclassified' }
 SIoTTuyaCommunicator >> calcSignature: aString [
+
 	| signature |
-	
-	"aString := 'mm5ne3a5ajowv36fcfgl1631918323616GET
-			e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-			
-			/v1.0/token?grant_type=1'. "
-	
 	signature := (HMAC on: SHA256)
-		key: accessSecret asByteArray;
-		digestMessage: aString asByteArray.
-	self halt.	
-	^ signature hex
-
-"clientId: mm5ne3a5ajowv36fcfgl
-timestamp: 1631916482846
-nonce:  
-string: 'GET
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-
-/v1.0/token?grant_type=1'
-secret: f4df13667c1c4f06876214bcab3061df
-
-function calcSign(clientId,timestamp,nonce,signStr,secret){
-    var str = clientId + timestamp + nonce + signStr;
-
-	 str: 	mm5ne3a5ajowv36fcfgl1631918323616GET
-			e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-			
-			/v1.0/token?grant_type=1
-			
-    var hash = CryptoJS.HmacSHA256(str, secret);
-
-	 hash:  
-	
-    var hashInBase64 = hash.toString();
-	 cd25b85a9d9243c653e328d8b1b210eba8cf20a79dec12ab0f7ba42a7bcb9e86
-    var signUp = hashInBase64.toUpperCase();
-	 CD25B85A9D9243C653E328D8B1B210EBA8CF20A79DEC12AB0F7BA42A7BCB9E86
-    return signUp;
-
-
-"
+		             key: accessSecret asByteArray;
+		             digestMessage: aString asByteArray.
+	^ signature hex asUppercase
 ]
 
 { #category : #'as yet unclassified' }
@@ -147,38 +111,38 @@ SIoTTuyaCommunicator >> formatToJSONObject: aDictionary [
 ]
 
 { #category : #'private - requesting' }
+SIoTTuyaCommunicator >> get: path headers: aDictionary body: aDictionary2 [
+
+	| webClient |
+	webClient := ZnClient new
+		             url: path;
+		             headerAddAll: aDictionary.
+	^ webClient get
+]
+
+{ #category : #'private - requesting' }
 SIoTTuyaCommunicator >> getSignedServices: path headers: aDictionary [
 	
 	^ self getSignedServices: path headers: aDictionary body: ''
 ]
 
 { #category : #'private - requesting' }
-SIoTTuyaCommunicator >> getSignedServices: path headers: aDictionary body: aDictionary2 [
+SIoTTuyaCommunicator >> getSignedServices: path headers: aDictionaryHeader body: aDictionaryBody [
 
-	| webClient headerFormated get stringToSign stringSigned sha256 signature cr nonce |
-	headerFormated := self formatToJSONObject: aDictionary2.
+	| headerFormated get stringToSign stringSigned sha256 lf nonce |
+	headerFormated := self formatToJSONObject: aDictionaryBody.
 	sha256 := self calculateSHA256: headerFormated.
-	cr := Character lf asString.
+	lf := Character lf asString.
 	nonce := ''.
 
-	stringToSign := 'GET' , cr , sha256 , cr , headerFormated , cr , path.
-	"stringSigned := accessID , timestamp , nonce , stringToSign."
+	stringToSign := 'GET' , lf , sha256 , lf , headerFormated , lf , path.
 	stringSigned := accessID , easyAccessToken , timestamp  , nonce , stringToSign.
-	aDictionary at: 'access_token' put: easyAccessToken.
-	 
-	signature := (HMAC on: SHA256)
-		             key: accessSecret asByteArray;
-		             digestMessage: stringSigned asByteArray.
-	easySignToken := signature hex asUppercase.
-
-	aDictionary at: 'sign' put: easySignToken.
-	"aDictionary at: 't' put: timestamp."
+	aDictionaryHeader at: 'access_token' put: easyAccessToken.
 	
+	easySignToken := self calcSignature: stringSigned.
+	aDictionaryHeader at: 'sign' put: easySignToken.
 
-	webClient := ZnClient new
-		             url: url , path;
-		             headerAddAll: aDictionary.
-	get := webClient get.
+	get := self get: url , path headers: aDictionaryHeader body: aDictionaryBody.
 
 	^ get
 ]
@@ -190,32 +154,22 @@ SIoTTuyaCommunicator >> getSignedTokens: path headers: aDictionary [
 ]
 
 { #category : #'private - requesting' }
-SIoTTuyaCommunicator >> getSignedTokens: path headers: aDictionary body: aDictionary2 [
+SIoTTuyaCommunicator >> getSignedTokens: path headers: aDictionaryHeader body: aDictionaryBody [
 
-	| webClient headerFormated get stringToSign stringSigned sha256 signature cr nonce |
-	headerFormated := self formatToJSONObject: aDictionary2.
+	| headerFormated get stringToSign stringSigned sha256 lf nonce |
+	headerFormated := self formatToJSONObject: aDictionaryBody.
 	sha256 := self calculateSHA256: headerFormated.
-	cr := Character lf asString.
+	lf := Character lf asString.
 	nonce := ''.
 
-	stringToSign := 'GET' , cr , sha256 , cr , headerFormated , cr , path.
+	stringToSign := 'GET' , lf , sha256 , lf , headerFormated , lf , path.
 	stringSigned := accessID , timestamp , nonce , stringToSign.
-	"stringSigned := accessID , easyAccessToken , timestamp  , nonce , stringToSign.
-	aDictionary at: 'access_token' put: easyAccessToken."
 	
-	signature := (HMAC on: SHA256)
-		             key: accessSecret asByteArray;
-		             digestMessage: stringSigned asByteArray.
-	easySignToken := signature hex asUppercase.
-
-	aDictionary at: 'sign' put: easySignToken.
-	aDictionary at: 't' put: timestamp.
 	
-
-	webClient := ZnClient new
-		             url: url , path;
-		             headerAddAll: aDictionary.
-	get := webClient get.
+	easySignToken := self calcSignature: stringSigned.
+	aDictionaryHeader at: 'sign' put: easySignToken.
+	
+	get := self get: url , path headers: aDictionaryHeader body: aDictionaryBody.
 
 	^ get
 ]
@@ -232,38 +186,6 @@ SIoTTuyaCommunicator >> initialize [
 	url := 'https://openapi.tuyaeu.com'.
 	communicator := SIoTCommunication new.
 	communicator 
-]
-
-{ #category : #'private - requesting' }
-SIoTTuyaCommunicator >> signRequestPath: path headers: aDictionary [
-	| webClient queryString signature get apiKey |
-	
-	self halt. 
-	
-	
-	
-	
-	aDictionary at: 'timestamp' put: self timestamp.
-	queryString := self convertQueryAsString: aDictionary.
-	signature := self signQuery: queryString.
-	webClient := ZnClient new
-		url: path;
-		headerAddAll: {('X-MBX-APIKEY' -> apiKey)} asDictionary;
-		queryAddAll: aDictionary;
-		queryAddAll: {(#signature -> signature)} asDictionary.
-	SIoTLog logAdd: 'GET ',path,queryString.
-	get := [NeoJSONReader fromString: webClient get] ifError: [ :error | SIoTLog logAdd: 'ERROR ', error asString ].
-	
-
-
-
-]
-
-{ #category : #'as yet unclassified' }
-SIoTTuyaCommunicator >> signTokens [
-
-	accessID.
-	accessSecret. 
 ]
 
 { #category : #'as yet unclassified' }
