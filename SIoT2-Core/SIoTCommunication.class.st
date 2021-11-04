@@ -24,6 +24,6 @@ SIoTCommunication >> get: path parameters: aDictionary [
 	webClient := ZnClient new. 
 	webClient url: path.
 	webClient queryAddAll: aDictionary.
-	get := [NeoJSONReader fromString: webClient get asString] ifError: [ :error | SIoTLog logAdd: 'ERROR ', error asString ].
+	get := [NeoJSONReader fromString: webClient get asString] ifError: [ :error | SIoTLogger logAdd: 'ERROR ', error asString ].
 	^ get
 ]
