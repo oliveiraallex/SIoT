@@ -8,6 +8,18 @@ Class {
 	#category : #'SIoT2-Plugins'
 }
 
+{ #category : #accessing }
+SIoTTuya >> devices [
+
+	^ devices
+]
+
+{ #category : #accessing }
+SIoTTuya >> devices: anObject [
+
+	devices := anObject
+]
+
 { #category : #'as yet unclassified' }
 SIoTTuya >> getDeviceDataPoints: aStringDeviceID [
 	
@@ -97,34 +109,6 @@ SIoTTuya >> getDeviceLog: aStringDeviceID type: aString from: startTimestamp to:
 ]
 
 { #category : #'as yet unclassified' }
-SIoTTuya >> getDeviceLog: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp size: anInteger [
-	
-	| result objectFromJSON logs hasMoreLogs nextRowKey|
-	result := self getDeviceLogQuery: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp size: anInteger nextRowKey: ''. 
-	objectFromJSON := NeoJSONReader fromString: result.
-	(objectFromJSON includesKey: #success) 
-		ifTrue: [ ((objectFromJSON at:'success') = true) 
-			ifTrue: [  
-				hasMoreLogs := (objectFromJSON at:'result')at: 'has_next'.
-				logs := ((objectFromJSON at:'result')at: 'logs') asOrderedCollection.
-
-				[hasMoreLogs] whileTrue: [
-					nextRowKey := (objectFromJSON at:'result')at: 'next_row_key'.
-					result := self getDeviceLogQuery: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp size: anInteger nextRowKey: nextRowKey. 
-					objectFromJSON := NeoJSONReader fromString: result.
-					logs addAll: ((objectFromJSON at:'result')at: 'logs') asOrderedCollection.
-					hasMoreLogs := (objectFromJSON at:'result')at: 'has_next'.
-				].
-				^ logs				
-			]
-			ifFalse: [ ^ objectFromJSON at:'msg' ]
-		]
-		ifFalse: [ ^ 'error' ]
-		
-	"type: (1 online, 2 offline, 3 device activation, 4 device reset, 5 instructions Issue, 6 firmware upgrade, 7 data point report, 8 device semaphore, 9 device restart, 10 timing information)" 
-]
-
-{ #category : #'as yet unclassified' }
 SIoTTuya >> getDevices [
 	
 	| result objectFromJSON |
@@ -180,4 +164,23 @@ SIoTTuya >> refreshTokens [
 	easyRefreshToken := nil.
 	easySignToken := nil.
 	self getTokens
+]
+
+{ #category : #initialization }
+SIoTTuya >> updateDevicesList [
+	devices := self getDevices at: 'devices'
+]
+
+{ #category : #accessing }
+SIoTTuya >> user [
+
+	^ user
+]
+
+{ #category : #accessing }
+SIoTTuya >> user: anObject [
+
+	user := anObject.
+	accessID := user accessID.
+	accessSecret := user accessSecret
 ]

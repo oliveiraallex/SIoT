@@ -194,8 +194,8 @@ SIoTTuyaCommunicator >> getUnixTimestamp [
 { #category : #'as yet unclassified' }
 SIoTTuyaCommunicator >> initialize [ 
 	url := 'https://openapi.tuyaeu.com'.
-	communicator := SIoTCommunication new.
-	communicator 
+	'communicator := SIoTCommunication new.
+	communicator '
 ]
 
 { #category : #'as yet unclassified' }
