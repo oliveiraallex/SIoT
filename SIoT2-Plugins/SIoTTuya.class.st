@@ -1,6 +1,10 @@
 Class {
 	#name : #SIoTTuya,
 	#superclass : #SIoTTuyaQueries,
+	#instVars : [
+		'user',
+		'devices'
+	],
 	#category : #'SIoT2-Plugins'
 }
 
@@ -62,6 +66,34 @@ SIoTTuya >> getDeviceInformation: aStringDeviceID [
 			ifFalse: [ ^ objectFromJSON at:'msg' ]
 		]
 		ifFalse: [ ^ 'error' ]
+]
+
+{ #category : #'as yet unclassified' }
+SIoTTuya >> getDeviceLog: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp [ 
+	
+	| result objectFromJSON logs hasMoreLogs nextRowKey|
+	result := self getDeviceLogQuery: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp nextRowKey: ''. 
+	objectFromJSON := NeoJSONReader fromString: result.
+	(objectFromJSON includesKey: #success) 
+		ifTrue: [ ((objectFromJSON at:'success') = true) 
+			ifTrue: [  
+				hasMoreLogs := (objectFromJSON at:'result')at: 'has_next'.
+				logs := ((objectFromJSON at:'result')at: 'logs') asOrderedCollection.
+
+				[hasMoreLogs] whileTrue: [
+					nextRowKey := (objectFromJSON at:'result')at: 'next_row_key'.
+					result := self getDeviceLogQuery: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp nextRowKey: nextRowKey. 
+					objectFromJSON := NeoJSONReader fromString: result.
+					logs addAll: ((objectFromJSON at:'result')at: 'logs').
+					hasMoreLogs := (objectFromJSON at:'result')at: 'has_next'.
+				].
+				^ logs				
+			]
+			ifFalse: [ ^ objectFromJSON at:'msg' ]
+		]
+		ifFalse: [ ^ 'error' ]
+		
+	"type: (1 online, 2 offline, 3 device activation, 4 device reset, 5 instructions Issue, 6 firmware upgrade, 7 data point report, 8 device semaphore, 9 device restart, 10 timing information)" 
 ]
 
 { #category : #'as yet unclassified' }
