@@ -45,9 +45,9 @@ SIoTTuyaQueries >> getDeviceInformationQuery: aStringDeviceID [
 ]
 
 { #category : #'as yet unclassified' }
-SIoTTuyaQueries >> getDeviceLogQuery: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp size: anInteger nextRowKey: aStringKey [
+SIoTTuyaQueries >> getDeviceLogQuery: aStringDeviceID type: aString from: startTimestamp to: endtTimestamp nextRowKey: aStringKey [
 	^ self getSignedServices: '/v1.0/devices/',aStringDeviceID,'/logs?',
-		'codes=&end_time=',endtTimestamp,'&last_row_key=','&size=',anInteger asString,'&start_row_key=',aStringKey,'&start_time=',startTimestamp,'&type=',aString
+		'codes=&end_time=',endtTimestamp,'&last_row_key=','&size=100&start_row_key=',aStringKey,'&start_time=',startTimestamp,'&type=',aString
 		headers:
 			{('client_id' -> accessID asString).
 			('sign' -> easySignToken asString).
