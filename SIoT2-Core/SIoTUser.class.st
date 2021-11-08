@@ -133,7 +133,7 @@ SIoTUser >> singleTrack: aString [
 			dataPoints := platform getDeviceDataPoints: aString. ].
 
 	self logDataPoints: dataPoints deviceID: aString.
-	Transcript show: dataPoints asString ; cr.
+	"Transcript show: dataPoints asString ; cr."
 	1 second wait.
 	] on: Error do: [:ignore | ^ nil ]
 ]
